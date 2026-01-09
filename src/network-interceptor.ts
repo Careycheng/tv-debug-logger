@@ -29,10 +29,10 @@ export class NetworkInterceptor {
       const method = init?.method || 'GET';
       const startTime = Date.now();
 
-      return self.originalFetch. apply(window, [input, init]).then(
+      return self.originalFetch. apply(window, [input, init] as [RequestInfo | URL, RequestInit | undefined]).then(
         (response) => {
           const duration = Date.now() - startTime;
-          self.logRequest(method, url, response. status, duration, 'success');
+          self.logRequest(method, url, response.status, duration, 'success');
           return response;
         },
         (error) => {
@@ -46,14 +46,30 @@ export class NetworkInterceptor {
 
   private interceptXHR(): void {
     const self = this;
-    let requestData: { method: string; url: string; startTime: number } | null = null;
+    const requestMap = new WeakMap<XMLHttpRequest, { method: string; url: string; startTime: number }>();
 
-    XMLHttpRequest.prototype.open = function (method: string, url: string, ... args: any[]) {
-      requestData = { method, url, startTime: Date.now() };
-      return self.originalXHROpen.apply(this, [method, url, ...args] as any);
+    XMLHttpRequest.prototype.open = function (
+      method: string,
+      url: string | URL,
+      async?: boolean,
+      username?: string | null,
+      password?: string | null
+    ): void {
+      const urlString = typeof url === 'string' ? url : url.toString();
+      requestMap.set(this, { method, url: urlString, startTime: Date.now() });
+      
+      if (async !== undefined) {
+        if (username !== undefined) {
+          return self.originalXHROpen.call(this, method, url, async, username, password);
+        }
+        return self.originalXHROpen.call(this, method, url, async);
+      }
+      return self.originalXHROpen. call(this, method, url);
     };
 
-    XMLHttpRequest.prototype.send = function (...args: any[]) {
+    XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
+      const requestData = requestMap.get(this);
+      
       if (requestData) {
         const { method, url, startTime } = requestData;
         
@@ -63,12 +79,17 @@ export class NetworkInterceptor {
         });
 
         this.addEventListener('error', function () {
-          const duration = Date.now() - startTime;
+          const duration = Date. now() - startTime;
           self.logRequest(method, url, 0, duration, 'error');
+        });
+
+        this.addEventListener('abort', function () {
+          const duration = Date.now() - startTime;
+          self.logRequest(method, url, 0, duration, 'error', new Error('Request aborted'));
         });
       }
 
-      return self.originalXHRSend. apply(this, args);
+      return self.originalXHRSend. call(this, body);
     };
   }
 
