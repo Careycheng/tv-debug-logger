@@ -7,14 +7,15 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
-  "scripts": {
+  "scripts":  {
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [
+  "keywords":  [
     "tv",
     "debug",
     "logger",
@@ -29,7 +30,7 @@
   "author": "Careycheng",
   "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-commonjs":  "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^4.9.6",
@@ -40,5 +41,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Careycheng/tv-debug-logger.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/Careycheng/tv-debug-logger/issues"
+  },
+  "homepage": "https://github.com/Careycheng/tv-debug-logger#readme"
 }
