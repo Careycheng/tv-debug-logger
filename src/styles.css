@@ -1,1 +1,228 @@
+: root {
+  --tv-logger-bg: rgba(0, 0, 0, 0.95);
+  --tv-logger-text: #ffffff;
+  --tv-logger-border: #333;
+  --tv-logger-highlight: #007aff;
+  --tv-logger-success: #34c759;
+  --tv-logger-warning: #ff9500;
+  --tv-logger-error: #ff3b30;
+  --tv-logger-info: #5ac8fa;
+}
 
+.tv-logger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom:  0;
+  background:  var(--tv-logger-bg);
+  color: var(--tv-logger-text);
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.tv-logger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 15px;
+  border-bottom:  2px solid var(--tv-logger-border);
+  margin-bottom: 15px;
+}
+
+.tv-logger-title {
+  font-size: 24px;
+  font-weight:  bold;
+}
+
+.tv-logger-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tv-logger-tab {
+  background: transparent;
+  border: 2px solid var(--tv-logger-border);
+  color: var(--tv-logger-text);
+  padding: 8px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.tv-logger-tab.active {
+  background: var(--tv-logger-highlight);
+  border-color: var(--tv-logger-highlight);
+}
+
+.tv-logger-controls {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.tv-logger-stats {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+  font-size: 14px;
+  opacity: 0.8;
+  border-bottom: 1px solid var(--tv-logger-border);
+  margin-bottom: 10px;
+}
+
+.tv-logger-body {
+  flex: 1;
+  overflow:  hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-logger-list {
+  flex: 1;
+  overflow-y: auto;
+  padding:  10px 0;
+}
+
+.tv-logger-list: :-webkit-scrollbar {
+  width: 8px;
+}
+
+.tv-logger-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tv-logger-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.tv-logger-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border-left: 3px solid transparent;
+  margin-bottom: 2px;
+  transition: all 0.2s;
+}
+
+.tv-logger-item.selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--tv-logger-highlight);
+}
+
+.tv-logger-item.tv-logger-error {
+  border-left-color: var(--tv-logger-error);
+}
+
+.tv-logger-item. tv-logger-warn {
+  border-left-color: var(--tv-logger-warning);
+}
+
+.tv-logger-item.tv-logger-success {
+  border-left-color: var(--tv-logger-success);
+}
+
+.tv-logger-time {
+  color: #888;
+  font-size: 14px;
+  min-width: 90px;
+}
+
+.tv-logger-icon {
+  font-size: 18px;
+}
+
+.tv-logger-type {
+  color: var(--tv-logger-info);
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.tv-logger-message {
+  flex: 1;
+  overflow:  hidden;
+  text-overflow:  ellipsis;
+  white-space: nowrap;
+}
+
+.tv-logger-duration {
+  color: var(--tv-logger-warning);
+  font-size: 14px;
+}
+
+.tv-logger-empty {
+  text-align: center;
+  padding: 40px;
+  opacity: 0.5;
+}
+
+.tv-logger-detail {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform:  translateX(-50%);
+  width: 80%;
+  max-height: 70%;
+  background: rgba(20, 20, 20, 0.98);
+  border: 2px solid var(--tv-logger-highlight);
+  border-radius: 10px;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-logger-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items:  center;
+  padding-bottom:  15px;
+  border-bottom:  2px solid var(--tv-logger-border);
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tv-logger-detail-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tv-logger-detail-row {
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.tv-logger-detail-row strong {
+  color: var(--tv-logger-highlight);
+  display: inline-block;
+  min-width: 80px;
+}
+
+.tv-logger-detail-row pre {
+  margin: 10px 0;
+  padding:  15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.tv-logger-hint {
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* Light theme */
+. tv-logger-light {
+  --tv-logger-bg: rgba(255, 255, 255, 0.95);
+  --tv-logger-text: #000000;
+  --tv-logger-border: #ddd;
+}
