@@ -1,7 +1,7 @@
 : root {
   --tv-logger-bg: rgba(0, 0, 0, 0.95);
   --tv-logger-text: #ffffff;
-  --tv-logger-border: #333;
+  --tv-logger-border: #333333;
   --tv-logger-highlight: #007aff;
   --tv-logger-success: #34c759;
   --tv-logger-warning: #ff9500;
@@ -9,20 +9,20 @@
   --tv-logger-info: #5ac8fa;
 }
 
-.tv-logger {
+. tv-logger {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom:  0;
-  background:  var(--tv-logger-bg);
+  background: var(--tv-logger-bg);
   color: var(--tv-logger-text);
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family:  Consolas, Monaco, Courier New, monospace;
   font-size: 16px;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  box-sizing: border-box;
+  box-sizing:  border-box;
 }
 
 .tv-logger-header {
@@ -36,7 +36,7 @@
 
 .tv-logger-title {
   font-size: 24px;
-  font-weight:  bold;
+  font-weight: bold;
 }
 
 .tv-logger-tabs {
@@ -55,7 +55,7 @@
   transition: all 0.3s;
 }
 
-.tv-logger-tab.active {
+.tv-logger-tab. active {
   background: var(--tv-logger-highlight);
   border-color: var(--tv-logger-highlight);
 }
@@ -85,10 +85,10 @@
 .tv-logger-list {
   flex: 1;
   overflow-y: auto;
-  padding:  10px 0;
+  padding: 10px 0;
 }
 
-.tv-logger-list: :-webkit-scrollbar {
+.tv-logger-list::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -111,7 +111,7 @@
   transition: all 0.2s;
 }
 
-.tv-logger-item.selected {
+.tv-logger-item. selected {
   background: rgba(255, 255, 255, 0.1);
   border-left-color: var(--tv-logger-highlight);
 }
@@ -129,7 +129,7 @@
 }
 
 .tv-logger-time {
-  color: #888;
+  color: #888888;
   font-size: 14px;
   min-width: 90px;
 }
@@ -145,7 +145,7 @@
 }
 
 .tv-logger-message {
-  flex: 1;
+  flex:  1;
   overflow:  hidden;
   text-overflow:  ellipsis;
   white-space: nowrap;
@@ -182,8 +182,8 @@
   display: flex;
   justify-content: space-between;
   align-items:  center;
-  padding-bottom:  15px;
-  border-bottom:  2px solid var(--tv-logger-border);
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--tv-logger-border);
   margin-bottom: 15px;
   font-size: 20px;
   font-weight: bold;
@@ -206,8 +206,8 @@
 }
 
 .tv-logger-detail-row pre {
-  margin: 10px 0;
-  padding:  15px;
+  margin:  10px 0;
+  padding: 15px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 5px;
   overflow-x: auto;
@@ -220,9 +220,8 @@
   font-size: 14px;
 }
 
-/* Light theme */
-. tv-logger-light {
+.tv-logger-light {
   --tv-logger-bg: rgba(255, 255, 255, 0.95);
   --tv-logger-text: #000000;
-  --tv-logger-border: #ddd;
+  --tv-logger-border: #dddddd;
 }
