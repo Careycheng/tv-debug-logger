@@ -2,8 +2,8 @@ import { LogEntry } from './types';
 
 export class NetworkInterceptor {
   private originalFetch: typeof fetch;
-  private originalXHROpen: typeof XMLHttpRequest.prototype.open;
-  private originalXHRSend: typeof XMLHttpRequest.prototype.send;
+  private originalXHROpen: any;
+  private originalXHRSend: any;
 
   constructor(private onLog: (entry: LogEntry) => void) {
     this.originalFetch = window.fetch;
@@ -29,7 +29,7 @@ export class NetworkInterceptor {
       const method = init?.method || 'GET';
       const startTime = Date.now();
 
-      return self.originalFetch. apply(window, [input, init] as [RequestInfo | URL, RequestInit | undefined]).then(
+      return self.originalFetch. apply(window, [input, init] as any).then(
         (response) => {
           const duration = Date.now() - startTime;
           self.logRequest(method, url, response.status, duration, 'success');
@@ -48,32 +48,20 @@ export class NetworkInterceptor {
     const self = this;
     const requestMap = new WeakMap<XMLHttpRequest, { method: string; url: string; startTime: number }>();
 
-    XMLHttpRequest.prototype.open = function (
-      method: string,
-      url: string | URL,
-      async?: boolean,
-      username?: string | null,
-      password?: string | null
-    ): void {
-      const urlString = typeof url === 'string' ? url : url.toString();
-      requestMap.set(this, { method, url: urlString, startTime: Date.now() });
-      
-      if (async !== undefined) {
-        if (username !== undefined) {
-          return self.originalXHROpen.call(this, method, url, async, username, password);
-        }
-        return self.originalXHROpen.call(this, method, url, async);
-      }
-      return self.originalXHROpen. call(this, method, url);
+    XMLHttpRequest.prototype.open = function (this: XMLHttpRequest, ...args: any[]): void {
+      const method = args[0] as string;
+      const url = typeof args[1] === 'string' ? args[1] : args[1]?.toString() || '';
+      requestMap.set(this, { method, url, startTime: Date. now() });
+      return self.originalXHROpen.apply(this, args);
     };
 
-    XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
+    XMLHttpRequest.prototype.send = function (this: XMLHttpRequest, body?: Document | XMLHttpRequestBodyInit | null): void {
       const requestData = requestMap.get(this);
       
       if (requestData) {
         const { method, url, startTime } = requestData;
         
-        this.addEventListener('load', function () {
+        this.addEventListener('load', function (this: XMLHttpRequest) {
           const duration = Date.now() - startTime;
           self.logRequest(method, url, this.status, duration, 'success');
         });
