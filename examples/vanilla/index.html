@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Debug Logger - Vanilla JS Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      background:  #007aff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0051d5;
+    }
+    . info {
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 TV Debug Logger Demo</h1>
+  
+  <div class="info">
+    <p><strong>按 F12 打开调试面板</strong></p>
+    <p>或者使用 Konami Code:  上上下下左右左右BA</p>
+  </div>
 
+  <h2>测试功能</h2>
+  <button onclick="testConsole()">📝 测试控制台日志</button>
+  <button onclick="testNetwork()">🌐 测试网络请求</button>
+  <button onclick="testWebSocket()">🔌 测试 WebSocket</button>
+  <button onclick="testError()">❌ 测试错误日志</button>
+
+  <div class="info">
+    <h3>遥控器操作指南：</h3>
+    <ul>
+      <li><strong>上/下键</strong>：浏览日志列表</li>
+      <li><strong>左/右键</strong>：切换标签页</li>
+      <li><strong>OK/Enter</strong>：查看详情</li>
+      <li><strong>返回/Esc</strong>：关闭面板或详情</li>
+      <li><strong>数字键 1</strong>：清空日志</li>
+      <li><strong>数字键 2</strong>：暂停/继续</li>
+      <li><strong>数字键 3</strong>：导出日志</li>
+    </ul>
+  </div>
+
+  <script type="module">
+    // 注意：这里使用 CDN 或本地构建后的文件
+    // import TVDebugLogger from '../../dist/index.esm.js';
+    
+    // 为了演示，这里假设已经通过 script 标签引入
+    // 实际使用时应该这样引入：
+    // import TVDebugLogger from 'tv-debug-logger';
+    // import 'tv-debug-logger/dist/tv-debug-logger.css';
+
+    // 模拟引入（实际项目中使用上面的 import）
+    const script = document.createElement('script');
+    script.src = '../../dist/index.umd.js';
+    script.onload = () => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '../../dist/tv-debug-logger.css';
+      document.head.appendChild(link);
+
+      const logger = new window.TVDebugLogger({
+        hotkey: 'F12',
+        captureConsole: true,
+        captureNetwork: true,
+        captureWebSocket: true,
+        theme: 'dark'
+      });
+      
+      logger.init();
+      window.tvLogger = logger;
+
+      console.log('TV Debug Logger 已初始化！按 F12 打开面板');
+    };
+    document.head.appendChild(script);
+
+    window.testConsole = () => {
+      console.log('这是一条普通日志', { timestamp: new Date() });
+      console.info('这是一条信息日志', ['item1', 'item2']);
+      console.warn('这是一条警告日志');
+      setTimeout(() => {
+        console.error('这是一条错误日志', new Error('测试错误'));
+      }, 500);
+    };
+
+    window. testNetwork = async () => {
+      try {
+        // Fetch 请求
+        const response = await fetch('https://api.github.com/users/github');
+        const data = await response.json();
+        console.log('GitHub API 响应:', data);
+
+        // XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.github.com/users/octocat');
+        xhr.onload = () => {
+          console.log('XHR 请求完成');
+        };
+        xhr.send();
+      } catch (error) {
+        console.error('网络请求失败:', error);
+      }
+    };
+
+    window. testWebSocket = () => {
+      try {
+        const ws = new WebSocket('wss://echo.websocket.org');
+        
+        ws.onopen = () => {
+          console.log('WebSocket 已连接');
+          ws.send('Hello from TV Debug Logger! ');
+          ws.send(JSON.stringify({ type: 'test', data: 'Testing WebSocket' }));
+        };
+        
+        ws.onmessage = (event) => {
+          console.log('收到 WebSocket 消息:', event. data);
+          setTimeout(() => ws.close(), 2000);
+        };
+        
+        ws.onerror = (error) => {
+          console. error('WebSocket 错误:', error);
+        };
+        
+        ws.onclose = () => {
+          console.log('WebSocket 已断开');
+        };
+      } catch (error) {
+        console.error('WebSocket 创建失败:', error);
+      }
+    };
+
+    window. testError = () => {
+      try {
+        throw new Error('这是一个测试错误');
+      } catch (error) {
+        console.error('捕获到错误:', error);
+      }
+      
+      setTimeout(() => {
+        console.warn('警告：这是一个延迟的警告消息');
+      }, 1000);
+    };
+  </script>
+</body>
+</html>
