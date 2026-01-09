@@ -9,7 +9,8 @@ export default {
     {
       file: 'dist/index.js',
       format: 'cjs',
-      sourcemap: true
+      sourcemap: true,
+      exports: 'default'
     },
     {
       file: 'dist/index.esm.js',
@@ -23,7 +24,7 @@ export default {
       sourcemap: true
     }
   ],
-  plugins: [
+  plugins:  [
     resolve(),
     commonjs(),
     typescript({
@@ -31,7 +32,9 @@ export default {
     }),
     postcss({
       extract: 'tv-debug-logger.css',
-      minimize: true
+      minimize: true,
+      use: ['sass'],
+      extensions: ['.css']
     })
   ]
 };
