@@ -12,7 +12,7 @@ export default class TVDebugLogger {
   private consoleInterceptor?:  ConsoleInterceptor;
   private networkInterceptor?: NetworkInterceptor;
   private wsInterceptor?: WebSocketInterceptor;
-  private uiRenderer?:  UIRenderer;
+  private uiRenderer?: UIRenderer;
   private keyboardHandler?: KeyboardHandler;
   private isVisible: boolean = false;
   private isPaused: boolean = false;
@@ -22,20 +22,23 @@ export default class TVDebugLogger {
     this.options = {
       hotkey: options.hotkey || 'F12',
       maxLogs: options.maxLogs || 1000,
-      captureConsole:  options.captureConsole !== false,
+      captureConsole: options.captureConsole !== false,
       captureNetwork: options.captureNetwork !== false,
-      captureWebSocket: options. captureWebSocket !== false,
+      captureWebSocket: options.captureWebSocket !== false,
       autoScroll: options.autoScroll !== false,
       theme: options.theme || 'dark',
-      initialVisible: options. initialVisible || false,
+      initialVisible: options.initialVisible || false,
       zIndex: options.zIndex || 999999
     };
   }
 
   init(): void {
     // 初始化 UI
-    this.uiRenderer = new UIRenderer(this.options. theme, this.options.zIndex);
+    this.uiRenderer = new UIRenderer(this.options.theme, this.options.zIndex);
     this.uiRenderer.render();
+    
+    // 将 uiRenderer 挂载到 window 供 KeyboardHandler 使用
+    (window as any).__tvLoggerUIRenderer = this.uiRenderer;
 
     // 初始化键盘处理
     this.keyboardHandler = new KeyboardHandler(
@@ -58,7 +61,7 @@ export default class TVDebugLogger {
 
     if (this.options.captureWebSocket) {
       this.wsInterceptor = new WebSocketInterceptor((entry) => this.addLog(entry));
-      this.wsInterceptor.init();
+      this.wsInterceptor. init();
     }
 
     if (this.options.initialVisible) {
@@ -72,11 +75,14 @@ export default class TVDebugLogger {
     this.wsInterceptor?.destroy();
     this.uiRenderer?.destroy();
     this.keyboardHandler?.destroy();
+    
+    // 清理全局引用
+    delete (window as any).__tvLoggerUIRenderer;
   }
 
   show(): void {
     this.isVisible = true;
-    this.uiRenderer?. show();
+    this. uiRenderer?. show();
     this.updateUI();
   }
 
@@ -89,7 +95,7 @@ export default class TVDebugLogger {
     if (this.isVisible) {
       this.hide();
     } else {
-      this. show();
+      this.show();
     }
   }
 
@@ -149,7 +155,7 @@ export default class TVDebugLogger {
     if (this.currentFilter === 'all') {
       return this.logs;
     }
-    return this.logs.filter(log => log.type === this.currentFilter);
+    return this. logs.filter(log => log.type === this.currentFilter);
   }
 
   private handleAction(action: string): void {
